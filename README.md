@@ -1,5 +1,10 @@
 # Single node cluster (snc) scripts for OpenShift 4 
 
+> [!IMPORTANT]  
+> This is a fork of https://github.com/crc-org/snc. The fork purpose is a PoC where Cilium is used as CNI plugin within OpenShift local.
+
+Instructions for the PoC can be found in [Cilium image instructions](./cilium-image.md).
+
 ## How to use?
 - Make sure the one time setup is satisfied. (https://github.com/openshift/installer/blob/master/docs/dev/libvirt/README.md#one-time-setup)
 - Clone this repo `git clone https://github.com/code-ready/snc.git`

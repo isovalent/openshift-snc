@@ -133,9 +133,16 @@ ${YQ} eval --inplace ".metadata.name = \"${SNC_PRODUCT_NAME}\"" ${INSTALL_DIR}/i
 ${YQ} eval --inplace '.compute[0].replicas = 0' ${INSTALL_DIR}/install-config.yaml
 replace_pull_secret ${INSTALL_DIR}/install-config.yaml
 ${YQ} eval ".sshKey = \"$(cat id_ecdsa_crc.pub)\"" --inplace ${INSTALL_DIR}/install-config.yaml
+${YQ} eval --inplace ".networking.networkType = \"Cilium\"" ${INSTALL_DIR}/install-config.yaml
 
 # Create the manifests using the INSTALL_DIR
 OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE=$OPENSHIFT_INSTALL_RELEASE_IMAGE_OVERRIDE ${OPENSHIFT_INSTALL} --dir ${INSTALL_DIR} create manifests
+
+# Add Cilium manifests
+cilium_version="1.14.3"
+git_dir="$(mktemp -d)"
+git clone https://github.com/isovalent/olm-for-cilium ${git_dir}
+cp ${git_dir}/manifests/cilium.v${cilium_version}/* "${INSTALL_DIR}/manifests"
 
 # Add CVO overrides before first start of the cluster. Objects declared in this file won't be created.
 ${YQ} eval-all --inplace 'select(fileIndex == 0) * select(filename == "cvo-overrides.yaml")' ${INSTALL_DIR}/manifests/cvo-overrides.yaml cvo-overrides.yaml
